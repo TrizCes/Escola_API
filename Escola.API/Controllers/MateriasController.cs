@@ -115,6 +115,23 @@ namespace Escola.API.Controllers
             }
         }
 
+        // DELETE: api/Materias/5
+        [HttpDelete("{id}")]
+        public IActionResult DeleteMateria(int id)
+        {
+            try
+            {
+                _materiaService.DeletarMateria(id);
+                _memoryCache.Remove($"materia:{id}");
+            }
+            catch (NotFoundException ex)
+            {
+                return StatusCode(StatusCodes.Status404NotFound, ex.Message);
+            }
+
+            return StatusCode(204);
+        }
+
         /*
         // PUT: api/Materias/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

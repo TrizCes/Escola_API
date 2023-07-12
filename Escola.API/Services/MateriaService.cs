@@ -48,6 +48,17 @@ namespace Escola.API.Services
             return materia;
         }
         public Materia Atualizar(Materia materia) { return materia; }
-        public void DeletarMateria(int id) { }
+        public void DeletarMateria(int id) {
+
+            var materiaDelete = _materiaRepository.ObterPorId(id);
+
+            if (materiaDelete == null)
+            {
+                throw new NotFoundException("Matéria não encontrada");
+            }
+
+            _materiaRepository.Excluir(materiaDelete);
+            
+        }
     }
 }
