@@ -5,5 +5,7 @@ namespace Escola.API.Interfaces.Repositories
     public interface IMateriaRepository : IBaseRepository<Materia, int>
     {
         public Materia ObterPorNome(string nome);
+
+        public bool MateriaJaCadastrado(string nome);
     }
 }

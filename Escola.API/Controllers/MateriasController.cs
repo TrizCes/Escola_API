@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Escola.API.Exceptions;
 using Escola.API.Services;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace Escola.API.Controllers
 {
@@ -91,6 +93,27 @@ namespace Escola.API.Controllers
             }
         }
 
+        // POST: api/Materias
+        [HttpPost]
+        public IActionResult PostMateria([FromBody] MateriaDTO materiaDTO)
+        {
+            try
+            {
+                var materia = new Materia(materiaDTO);
+                
+                materia = _materiaService.Criar(materia);
+
+                return Ok(new MateriaDTO(materia));
+            }
+            catch (RegistroDuplicadoException ex)
+            {
+                return StatusCode(StatusCodes.Status409Conflict, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
 
         /*
         // PUT: api/Materias/5
@@ -124,16 +147,7 @@ namespace Escola.API.Controllers
             return NoContent();
         }
 
-        // POST: api/Materias
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Materia>> PostMateria(Materia materia)
-        {
-            _context.Materias.Add(materia);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetMateria", new { id = materia.Id }, materia);
-        }
+        
 
         // DELETE: api/Materias/5
         [HttpDelete("{id}")]

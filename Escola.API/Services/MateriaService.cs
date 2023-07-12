@@ -3,6 +3,7 @@ using Escola.API.Interfaces.Repositories;
 using Escola.API.Model;
 using Escola.API.Exceptions;
 using System.Collections.Generic;
+using Escola.API.DataBase.Repositories;
 
 namespace Escola.API.Services
 {
@@ -36,7 +37,16 @@ namespace Escola.API.Services
             return materia;
         }
 
-        public Materia Criar(Materia materia) { return materia; }
+        public Materia Criar(Materia materia) {
+            var materiaExist = _materiaRepository.MateriaJaCadastrado(materia.Nome);
+            if (materiaExist)
+            {
+                throw new RegistroDuplicadoException("Matéria já cadastrada");
+            }
+
+            _materiaRepository.Inserir(materia);
+            return materia;
+        }
         public Materia Atualizar(Materia materia) { return materia; }
         public void DeletarMateria(int id) { }
     }
