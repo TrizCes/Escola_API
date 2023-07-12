@@ -37,6 +37,8 @@ namespace Escola.API
             services.AddScoped<IAlunoService,AlunoService>();
             services.AddScoped<IAlunoRepository, AlunoRepository>();
             services.AddScoped<ITurmaRepository, TurmaRepository>();
+            services.AddScoped<IMateriaService, MateriaService>();
+            services.AddScoped<IMateriaRepository, MateriaRepository>();
 
             services.AddMemoryCache();
 

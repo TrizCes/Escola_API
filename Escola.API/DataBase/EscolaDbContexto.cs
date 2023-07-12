@@ -6,6 +6,10 @@ namespace Escola.API.DataBase
 {
     public class EscolaDbContexto : DbContext
     {
+        public EscolaDbContexto() { }
+
+        public EscolaDbContexto(DbContextOptions options) : base(options) { }
+
         public virtual DbSet<Aluno> Alunos { get; set; }
 
         public virtual DbSet<Turma> Turmas { get; set; }
@@ -17,6 +21,7 @@ namespace Escola.API.DataBase
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Escola-API;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False");
+            
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
