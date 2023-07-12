@@ -9,9 +9,13 @@ namespace Escola.API.DataBase
 
         public virtual DbSet<Turma> Turmas { get; set; }
 
+        public virtual DbSet<Materia> Materias { get; set; }
+        public virtual DbSet<Boletim> Boletins { get; set; }
+        public virtual DbSet<NotasMateria> NotasMaterias { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Password=P@ssword;Persist Security Info=True;User ID=sa;Initial Catalog=EscolaDB-Audaces;Data Source=tcp:localhost,1433");
+            optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Escola-API;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -37,7 +41,7 @@ namespace Escola.API.DataBase
                                         .HasColumnType("VARCHAR")
                                         .HasMaxLength(150);
 
-            modelBuilder.Entity<Aluno>().Ignore(x => x.Idade);
+            modelBuilder.Entity<Aluno>().Property(x => x.Idade);
 
             modelBuilder.Entity<Aluno>().Property(x => x.Email)
                                         .IsRequired()
