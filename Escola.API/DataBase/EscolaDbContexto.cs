@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Escola.API.Model;
 
+
 namespace Escola.API.DataBase
 {
     public class EscolaDbContexto : DbContext
@@ -26,7 +27,7 @@ namespace Escola.API.DataBase
                                         .HasName("Pk_aluno_id");
 
             modelBuilder.Entity<Aluno>().Property(x => x.Id)
-                                        .HasColumnName("PK_ID" )
+                                        .HasColumnName("PK_ID")
                                         .HasColumnType("INT");
 
             modelBuilder.Entity<Aluno>().Property(x => x.Nome)
@@ -41,7 +42,8 @@ namespace Escola.API.DataBase
                                         .HasColumnType("VARCHAR")
                                         .HasMaxLength(150);
 
-            modelBuilder.Entity<Aluno>().Property(x => x.Idade);
+            modelBuilder.Entity<Aluno>().Property(x => x.Idade)
+                                        .HasDefaultValue(null);
 
             modelBuilder.Entity<Aluno>().Property(x => x.Email)
                                         .IsRequired()
@@ -90,6 +92,72 @@ namespace Escola.API.DataBase
 
             modelBuilder.Entity<Turma>().HasIndex(x => x.Nome)
                                         .IsUnique();
+
+            modelBuilder.Entity<Materia>().ToTable("Materias");
+
+            modelBuilder.Entity<Materia>().HasKey(x => x.Id);
+
+            modelBuilder.Entity<Materia>().Property(x => x.Id)
+                                        .HasColumnName("ID")
+                                        .HasColumnType("INT");
+
+            modelBuilder.Entity<Materia>().Property(x => x.Nome)
+                                        .IsRequired()
+                                        .HasColumnName("NOME")
+                                        .HasColumnType("VARCHAR")
+                                        .HasMaxLength(50);
+
+            modelBuilder.Entity<Boletim>().ToTable("Boletins");
+
+            modelBuilder.Entity<Boletim>().Property(x => x.Id)
+                                        .HasColumnName("ID")
+                                        .HasColumnType("INT");
+
+            modelBuilder.Entity<Boletim>().HasKey(x => x.Id);
+
+            modelBuilder.Entity<Boletim>().Property(x => x.DateTime)
+                                        .IsRequired()
+                                        .HasColumnName("DATA")
+                                        .HasColumnType("DATE");
+
+            modelBuilder.Entity<Boletim>().Property(x => x.AlunoId)
+                                        .IsRequired()
+                                        .HasColumnName("Aluno_FK")
+                                        .HasColumnType("INT");
+
+            modelBuilder.Entity<Boletim>().HasOne(x => x.Aluno)
+                                        .WithMany(x => x.Boletins)
+                                        .HasForeignKey(x => x.AlunoId)
+                                        .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<NotasMateria>().ToTable("NotasMaterias");
+
+            modelBuilder.Entity<NotasMateria>().Property(x => x.Id)
+                                        .HasColumnName("ID")
+                                        .HasColumnType("INT");
+
+            modelBuilder.Entity<NotasMateria>().HasKey(x => x.Id);
+
+            modelBuilder.Entity<NotasMateria>().Property(x => x.BoletimId)
+                                        .IsRequired()
+                                        .HasColumnName("Boletim_ID")
+                                        .HasColumnType("INT");
+
+            modelBuilder.Entity<NotasMateria>().HasOne(x => x.Boletim)
+                                        .WithMany(x => x.NotasMaterias)
+                                        .HasForeignKey(x => x.BoletimId)
+                                        .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<NotasMateria>().Property(x => x.MateriaId)
+                                        .IsRequired()
+                                        .HasColumnName("Materia_ID")
+                                        .HasColumnType("INT");
+
+            modelBuilder.Entity<NotasMateria>().HasOne(x => x.Materia)
+                                        .WithMany(x => x.NotasMaterias)
+                                        .HasForeignKey(x => x.MateriaId)
+                                        .OnDelete(DeleteBehavior.Cascade);
+
 
         }
     }
