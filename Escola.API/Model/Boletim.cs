@@ -1,21 +1,17 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.Collections.Generic;
 
 namespace Escola.API.Model
 {
     public class Boletim
     {
-        [Key]
         public int Id { get; set; }
 
-        [ForeignKey("Aluno")]
-        [Required]
         public int AlunoId { get; set; }
-        private Aluno Aluno { get; set; }
+        public virtual Aluno Aluno { get; set; }
 
-        [Required]
         public DateTime DateTime { get; set; }
+        public ICollection<NotasMateria> NotasMaterias { get; set; }
 
     }
 }
