@@ -18,5 +18,11 @@ namespace Escola.API.Model
             Nome = materiaDTO.Nome;
 
         }
+
+        public void Update(Materia materia)
+        {
+            Id = materia.Id;
+            Nome = materia.Nome;
+        }
     }
 }

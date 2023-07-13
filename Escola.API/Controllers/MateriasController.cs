@@ -115,6 +115,28 @@ namespace Escola.API.Controllers
             }
         }
 
+        // PUT: api/Materias/5
+        [HttpPut("{id}")]
+        public IActionResult PutMateria(int id, [FromBody] MateriaDTO materiaDTO)
+        {
+            try
+            {
+                var materia = new Materia(materiaDTO);
+                materia.Id = id;
+                if (!ModelState.IsValid) return BadRequest("Dados inválidos, favor verificar o formato obrigatório dos dados!");
+
+                materia = _materiaService.Atualizar(materia);
+
+                _memoryCache.Remove($"Matéria:{id}");
+
+                return Ok(new MateriaDTO(materia));
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
         // DELETE: api/Materias/5
         [HttpDelete("{id}")]
         public IActionResult DeleteMateria(int id)
@@ -132,60 +154,5 @@ namespace Escola.API.Controllers
             return StatusCode(204);
         }
 
-        /*
-        // PUT: api/Materias/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutMateria(int id, Materia materia)
-        {
-            if (id != materia.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(materia).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!MateriaExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        
-
-        // DELETE: api/Materias/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteMateria(int id)
-        {
-            var materia = await _context.Materias.FindAsync(id);
-            if (materia == null)
-            {
-                return NotFound();
-            }
-
-            _context.Materias.Remove(materia);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool MateriaExists(int id)
-        {
-            return _context.Materias.Any(e => e.Id == id);
-        }
-        */
     }
 }

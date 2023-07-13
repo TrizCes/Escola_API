@@ -36,7 +36,6 @@ namespace Escola.API.Services
             }
             return materia;
         }
-
         public Materia Criar(Materia materia) {
             var materiaExist = _materiaRepository.MateriaJaCadastrado(materia.Nome);
             if (materiaExist)
@@ -47,7 +46,15 @@ namespace Escola.API.Services
             _materiaRepository.Inserir(materia);
             return materia;
         }
-        public Materia Atualizar(Materia materia) { return materia; }
+        public Materia Atualizar(Materia materia) 
+        {
+            var materiaAtual = _materiaRepository.Atualizar(materia);
+            if (materiaAtual == null) throw new NotFoundException("Materia não encontrada");
+
+            materiaAtual.Update(materia);
+            
+            return materiaAtual;
+        }
         public void DeletarMateria(int id) {
 
             var materiaDelete = _materiaRepository.ObterPorId(id);
