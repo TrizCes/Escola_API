@@ -69,6 +69,30 @@ namespace Escola.API.Controllers
             }
         }
 
+        //GET: /alunos/{idAluno}/boletins/{id}
+        [HttpGet("/alunos/{alunoId}/boletins/{id}")]
+        public ActionResult GetPorIdValidaAluno(int alunoId, int id)
+        {
+            try
+            {
+
+                var boletim = _boletimService.ObterPorId(id);
+
+                if (boletim.AlunoId != alunoId)
+                    return NotFound("Boletim Id invalido para aluno");
+
+                return Ok(new BoletimDTO(boletim));
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
 
         /*
         // PUT: api/Boletins/5
