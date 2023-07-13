@@ -22,5 +22,11 @@ namespace Escola.API.Model
             DateTime = boletimDTO.DateTime;    
         }
 
+        public void Update(Boletim boletim)
+        {
+            Id = boletim.Id;
+            AlunoId = boletim.AlunoId;
+            DateTime = boletim.DateTime;            
+        }
     }
 }

@@ -48,6 +48,26 @@ namespace Escola.API.Controllers
             }
         }
 
+        //Put: /alunos/{idAluno}/boletins/{id}
+        [HttpPut("/alunos/{idAluno}/boletins/{id}")]
+        public ActionResult Put(BoletimDTO boletim, int idAluno, int id)
+        {
+            try
+            {
+                boletim.AlunoId = idAluno;
+                boletim.Id = id;
+                return Ok(new BoletimDTO(_boletimService.Atualizar(new Boletim(boletim))));
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         // GET:boletins
         [HttpGet("/alunos/{alunoId}/boletins")]
         public ActionResult<Boletim> GetBoletins(int alunoId)
