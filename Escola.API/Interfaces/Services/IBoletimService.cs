@@ -7,10 +7,9 @@ namespace Escola.API.Interfaces.Services
     {
         public Boletim Criar(Boletim boletim);
         public Boletim ObterPorId(int id);
-
-        public List<Boletim> ObterBoletinsAluno(int alunoId);
         public Boletim Atualizar(Boletim boletim);
         public List<Boletim> ObterBoletins();
         public void DeletarBoletim(int id);
+        public List<Boletim> ObterBoletinsAluno(int alunoId);
     }
 }

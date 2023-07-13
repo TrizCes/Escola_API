@@ -11,10 +11,12 @@ namespace Escola.API.Services
     public class BoletimService : IBoletimService
     {
         private readonly IBoletimRepository _boletimRepository;
-        public BoletimService(IBoletimRepository boletimRepository)
+        private readonly IAlunoService _alunoService;
+        public BoletimService(IBoletimRepository boletimRepository, IAlunoService alunoService)
         {
             _boletimRepository = boletimRepository;
-        }
+            _alunoService = alunoService;
+    }
 
         public Boletim ObterPorId(int id) 
         {
@@ -22,7 +24,7 @@ namespace Escola.API.Services
 
             if (boletim == null)
             {
-                throw new NotFoundException("Materia não encontrada");
+                throw new NotFoundException("Boletim não encontrado");
             }
             return boletim;
         }
@@ -37,7 +39,18 @@ namespace Escola.API.Services
         }
         public List<Boletim> ObterBoletins() => _boletimRepository.ObterTodos();
 
-        public Boletim Criar(Boletim boletim) { return boletim; }
+        public Boletim Criar(Boletim boletim) 
+        {
+            
+            if (_alunoService.ObterPorId(boletim.AlunoId) == null)
+            {
+                throw new NotFoundException("Aluno não consta no nosso banco de dados");
+            }
+            
+
+            _boletimRepository.Inserir(boletim);
+            return boletim;
+        }
         public Boletim Atualizar(Boletim boletim) { return boletim; }
         public void DeletarBoletim(int id) { }
     }

@@ -1,25 +1,23 @@
 ﻿using Escola.API.Model;
-using System.Collections.Generic;
 using System;
 
-namespace Escola.API.DTO
+namespace Escola.API.DTO.Responses
 {
-    public class BoletimDTO
+    public class BoletimResponseDTO
     {
         public int Id { get; set; }
 
         public int AlunoId { get; set; }
-        
+
         public DateTime DateTime { get; set; }
 
-        public BoletimDTO() { }
+        public BoletimResponseDTO() { }
 
-        public BoletimDTO(Boletim boletim)
+        public BoletimResponseDTO(Boletim boletim)
         {
             Id = boletim.Id;
             AlunoId = boletim.AlunoId;
             DateTime = boletim.DateTime;
         }
-        
     }
 }
