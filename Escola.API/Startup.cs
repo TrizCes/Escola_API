@@ -41,6 +41,8 @@ namespace Escola.API
             services.AddScoped<IMateriaRepository, MateriaRepository>();
             services.AddScoped<IBoletimService, BoletimService>();
             services.AddScoped<IBoletimRepository, BoletimRepository>();
+            services.AddScoped<INotasMateriaService, NotasMateriaService>();
+            services.AddScoped<INotasMateriaRepository, NotasMateriaRepository>();
 
             services.AddMemoryCache();
 
