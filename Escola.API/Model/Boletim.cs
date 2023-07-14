@@ -24,7 +24,6 @@ namespace Escola.API.Model
 
         public void Update(Boletim boletim)
         {
-            Id = boletim.Id;
             AlunoId = boletim.AlunoId;
             DateTime = boletim.DateTime;            
         }

@@ -17,7 +17,6 @@ namespace Escola.API.Services
             _boletimRepository = boletimRepository;
             _alunoService = alunoService;
     }
-
         public Boletim ObterPorId(int id) 
         {
             Boletim boletim = _boletimRepository.ObterPorId(id);
@@ -50,17 +49,21 @@ namespace Escola.API.Services
             _boletimRepository.Inserir(boletim);
             return boletim;
         }
-        public Boletim Atualizar(Boletim boletim) 
+        public Boletim Atualizar(Boletim boletim)
         {
-            Boletim boletimExist = _boletimRepository.ObterPorId(boletim.Id);
-            if (boletimExist == null) throw new NotFoundException("Boletim não encontrado");
-            
             var boletimAtual = _boletimRepository.Atualizar(boletim);
-            boletimAtual.Update(boletim);
+            if (boletimAtual == null) throw new NotFoundException("Boletim não encontrado");
             
+            boletimAtual.Update(boletim);
             return boletimAtual;
         }
-        public void DeletarBoletim(int id) { }
+        public void DeletarBoletim(int id) 
+        {
+            Boletim boletimExist = _boletimRepository.ObterPorId(id);
+            if (boletimExist == null) throw new NotFoundException("Boletim não encontrado");
+
+            _boletimRepository.Excluir(boletimExist);
+        }
 
     }
 }

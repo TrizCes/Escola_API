@@ -50,9 +50,9 @@ namespace Escola.API.Services
         {
             var materiaAtual = _materiaRepository.Atualizar(materia);
             if (materiaAtual == null) throw new NotFoundException("Materia não encontrada");
-
-            materiaAtual.Update(materia);
             
+            materiaAtual.Update(materia);
+
             return materiaAtual;
         }
         public void DeletarMateria(int id) {

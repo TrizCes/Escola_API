@@ -133,7 +133,26 @@ namespace Escola.API.Controllers
             }
         }
 
+        //DELETE: boletins/{id}
+        [HttpDelete("boletins/{id}")]
+        public ActionResult Delete(int id)
+        {
+            try
+            {
+                _boletimService.DeletarBoletim(id);
 
-        
+                return StatusCode(204);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+
     }
 }
