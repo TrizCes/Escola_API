@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Escola.API.Migrations
 {
     [DbContext(typeof(EscolaDbContexto))]
-    [Migration("20230712135300_dbCreate")]
-    partial class dbCreate
+    [Migration("20230714015134_createDB")]
+    partial class createDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

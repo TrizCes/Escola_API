@@ -21,7 +21,6 @@ namespace Escola.API.Model
 
         public void Update(Materia materia)
         {
-            Id = materia.Id;
             Nome = materia.Nome;
         }
     }
