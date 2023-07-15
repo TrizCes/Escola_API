@@ -64,12 +64,14 @@ namespace Escola.API.Services
             return notasMateria;
         }
 
-        public void DeletarBoletim(int id)
+        public void DeletarNota(int id)
         {
-            throw new System.NotImplementedException();
+            NotasMateria notas = _repository.ObterPorId(id);
+            if (notas == null) throw new NotFoundException("Arquivo indisponível");
+            _repository.Excluir(notas);
         }
 
-        public List<NotasMateria> ObterBoletins()
+        public List<NotasMateria> ObterNotas()
         {
             throw new System.NotImplementedException();
         }

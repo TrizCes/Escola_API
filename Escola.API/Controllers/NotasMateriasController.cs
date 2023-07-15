@@ -103,32 +103,25 @@ namespace Escola.API.Controllers
             }
         }
 
-        
-        /*
-        
-
-        
-
-        // DELETE: api/NotasMaterias/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteNotasMateria(int id)
+        // DELETE: /NotasMaterias/5
+        [HttpDelete("/NotasMaterias/{id}")]
+        public IActionResult DeleteNotasMateria(int id)
         {
-            var notasMateria = await _context.NotasMaterias.FindAsync(id);
-            if (notasMateria == null)
+            try
             {
-                return NotFound();
+                _notasMateriaService.DeletarNota(id);
+
+                return StatusCode(204);
             }
-
-            _context.NotasMaterias.Remove(notasMateria);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
-
-        private bool NotasMateriaExists(int id)
-        {
-            return _context.NotasMaterias.Any(e => e.Id == id);
-        }
-        */
+        
     }
 }

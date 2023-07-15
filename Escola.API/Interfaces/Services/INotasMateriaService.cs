@@ -8,8 +8,8 @@ namespace Escola.API.Interfaces.Services
         public NotasMateria Criar(NotasMateria notasMateria);
         public NotasMateria ObterPorId(int id);
         public NotasMateria Atualizar(NotasMateria notasMateria);
-        public List<NotasMateria> ObterBoletins();
-        public void DeletarBoletim(int id);
+        public List<NotasMateria> ObterNotas();
+        public void DeletarNota(int id);
         public List<NotasMateria> ObterNotasBoletim(int boiletimId);
     }
 }
