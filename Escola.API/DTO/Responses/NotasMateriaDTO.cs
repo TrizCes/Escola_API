@@ -10,6 +10,7 @@ namespace Escola.API.DTO
         public int Nota { get; set; }
 
         public NotasMateriaDTO() { }
+
         public NotasMateriaDTO(NotasMateria notasMateria)
         {
             Id = notasMateria.Id;

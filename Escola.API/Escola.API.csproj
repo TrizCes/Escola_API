@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DTO\Responses\NotasMateriaDTO.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Controllers\AlunosController.cs~RFf00c1b4.TMP" />
   </ItemGroup>
 

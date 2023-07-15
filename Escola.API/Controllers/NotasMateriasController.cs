@@ -10,6 +10,7 @@ using Escola.API.Model;
 using Escola.API.Interfaces.Services;
 using Escola.API.Exceptions;
 using Escola.API.DTO;
+using Escola.API.Services;
 
 namespace Escola.API.Controllers
 {
@@ -17,20 +18,40 @@ namespace Escola.API.Controllers
     [ApiController]
     public class NotasMateriasController : ControllerBase
     {
-        private readonly INotasMateriaService _notasMateriasService;
+        private readonly INotasMateriaService _notasMateriaService;
 
         public NotasMateriasController(INotasMateriaService notasMateriasService)
         {
-            _notasMateriasService = notasMateriasService;   
+            _notasMateriaService = notasMateriasService;   
         }
 
-        // GET: api/NotasMaterias/5
+        // POST: /NotasMaterias
+        [HttpPost("/NotasMateria")]
+        public ActionResult<NotasMateria> PostNotasMateria([FromBody] NotasMateriaDTO notasMateriaDTO)
+        {
+            try
+            {
+                notasMateriaDTO.Id = _notasMateriaService.Criar(new NotasMateria(notasMateriaDTO)).Id;
+
+                return Ok(notasMateriaDTO);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        // GET: NotasMaterias/5
         [HttpGet("{id}")]
         public ActionResult<NotasMateria> GetNotasMateria(int id)
         {
             try
             {
-                var notasMateria = _notasMateriasService.ObterPorId(id);
+                var notasMateria = _notasMateriaService.ObterPorId(id);
                 return Ok(new NotasMateriaDTO (notasMateria));
             }catch (NotFoundException ex)
             {
@@ -44,12 +65,12 @@ namespace Escola.API.Controllers
         }
 
         // GET: NotasMaterias
-        [HttpGet("/alunos/{alunoId}/boletins/{boletimId}/NotasMateria/")]
-        public ActionResult<NotasMateria> GetNotasMaterias(int alunoId, int boletimId)
+        [HttpGet("/alunos/boletins/{boletimId}/NotasMateria/")]
+        public ActionResult<NotasMateria> GetNotasMaterias(int boletimId)
         {
             try
             {
-                var notasMateria = _notasMateriasService.ObterNotasBoletim(alunoId, boletimId);
+                var notasMateria = _notasMateriaService.ObterNotasBoletim(boletimId);
                 return Ok(notasMateria);
             }
             catch (NotFoundException ex)
@@ -95,16 +116,7 @@ namespace Escola.API.Controllers
             return NoContent();
         }
 
-        // POST: api/NotasMaterias
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<NotasMateria>> PostNotasMateria(NotasMateria notasMateria)
-        {
-            _context.NotasMaterias.Add(notasMateria);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetNotasMateria", new { id = notasMateria.Id }, notasMateria);
-        }
+        
 
         // DELETE: api/NotasMaterias/5
         [HttpDelete("{id}")]

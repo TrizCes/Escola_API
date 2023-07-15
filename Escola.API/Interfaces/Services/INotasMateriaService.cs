@@ -10,6 +10,6 @@ namespace Escola.API.Interfaces.Services
         public NotasMateria Atualizar(NotasMateria notasMateria);
         public List<NotasMateria> ObterBoletins();
         public void DeletarBoletim(int id);
-        public List<NotasMateria> ObterNotasBoletim(int alunoId, int boiletimId);
+        public List<NotasMateria> ObterNotasBoletim(int boiletimId);
     }
 }

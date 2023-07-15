@@ -1,4 +1,5 @@
-﻿using Escola.API.Exceptions;
+﻿using Escola.API.DataBase.Repositories;
+using Escola.API.Exceptions;
 using Escola.API.Interfaces.Repositories;
 using Escola.API.Interfaces.Services;
 using Escola.API.Model;
@@ -10,11 +11,13 @@ namespace Escola.API.Services
     {
         private readonly INotasMateriaRepository _repository;
         private readonly IBoletimService _boletimService;
+        private readonly IMateriaService _materiaService;
 
-        public NotasMateriaService(INotasMateriaRepository repository, IBoletimService boletimService)
+        public NotasMateriaService(INotasMateriaRepository repository, IBoletimService boletimService, IMateriaService materiaService)
         {
             _repository = repository;
             _boletimService = boletimService;
+            _materiaService = materiaService;
         }
         public NotasMateria ObterPorId(int id)
         {
@@ -23,30 +26,12 @@ namespace Escola.API.Services
             return notas;
         }
 
-        public List<NotasMateria> ObterNotasBoletim(int alunoId, int boletimId)
+        public List<NotasMateria> ObterNotasBoletim(int boletimId)
         {
             var notasBoletins = _repository.ObterNotasBoletim(boletimId);
-            if (notasBoletins.Count == 0) throw new NotFoundException("Boletim inexistente");
-            var boletinsAluno = _boletimService.ObterBoletinsAluno(alunoId);
-
-            List<NotasMateria> confirmaAluno = new List<NotasMateria>();
-
-            foreach (var notas in notasBoletins)
-            {
-                foreach (var boletimAluno in boletinsAluno)
-                {
-                    if (boletimAluno.Id == notas.BoletimId) 
-                    {
-                        confirmaAluno.Add(notas);
-                    }
-                }
-            }
-            if (confirmaAluno.Count == 0)
-            {
-                throw new NotFoundException("O Id Aluno e o Id Boletim não conferem;");
-            }
-
-            return confirmaAluno;
+            if (notasBoletins.Count == 0) throw new NotFoundException("Boletim não possui notas relacionadas a ele no sistema");
+           
+            return notasBoletins;
         }
 
         public NotasMateria Atualizar(NotasMateria notasMateria)
@@ -56,7 +41,16 @@ namespace Escola.API.Services
 
         public NotasMateria Criar(NotasMateria notasMateria)
         {
-            throw new System.NotImplementedException();
+            if (_boletimService.ObterPorId(notasMateria.BoletimId) == null)
+            {
+                throw new NotFoundException("Boletim não consta no nosso banco de dados");
+            }
+            if (_materiaService.ObterPorId(notasMateria.MateriaId) == null)
+            {
+                throw new NotFoundException("A matéria não consta no nosso banco de dados");
+            }
+            _repository.Inserir(notasMateria);
+            return notasMateria;
         }
 
         public void DeletarBoletim(int id)
