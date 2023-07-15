@@ -45,6 +45,26 @@ namespace Escola.API.Controllers
             }
         }
 
+        // PUT: api/NotasMaterias/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("/NotasMateria/{id}")]
+        public IActionResult PutNotasMateria(int id, NotasMateriaDTO notasMateriaDTO)
+        {
+            try
+            {
+                notasMateriaDTO.Id = id;
+                return Ok(new NotasMateriaDTO(_notasMateriaService.Atualizar(new NotasMateria(notasMateriaDTO))));
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         // GET: NotasMaterias/5
         [HttpGet("{id}")]
         public ActionResult<NotasMateria> GetNotasMateria(int id)
@@ -85,36 +105,7 @@ namespace Escola.API.Controllers
 
         
         /*
-        // PUT: api/NotasMaterias/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutNotasMateria(int id, NotasMateria notasMateria)
-        {
-            if (id != notasMateria.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(notasMateria).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!NotasMateriaExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
+        
 
         
 

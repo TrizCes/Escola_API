@@ -36,7 +36,18 @@ namespace Escola.API.Services
 
         public NotasMateria Atualizar(NotasMateria notasMateria)
         {
-            throw new System.NotImplementedException();
+            var notasMateriaAtual = _repository.Atualizar(notasMateria);
+            if (notasMateriaAtual == null) throw new NotFoundException("Boletim não encontrado");
+            if (_boletimService.ObterPorId(notasMateria.BoletimId) == null)
+            {
+                throw new NotFoundException("Boletim não consta no nosso banco de dados");
+            }
+            if (_materiaService.ObterPorId(notasMateria.MateriaId) == null)
+            {
+                throw new NotFoundException("A matéria não consta no nosso banco de dados");
+            }
+            notasMateriaAtual.Update(notasMateria);
+            return notasMateriaAtual;
         }
 
         public NotasMateria Criar(NotasMateria notasMateria)

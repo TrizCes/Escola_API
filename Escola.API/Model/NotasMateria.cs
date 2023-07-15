@@ -1,4 +1,6 @@
 ﻿using Escola.API.DTO;
+using Microsoft.EntityFrameworkCore.Update.Internal;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -23,6 +25,13 @@ namespace Escola.API.Model
             BoletimId = notasMateriaDTO.BoletimId;
             MateriaId = notasMateriaDTO.MateriaId;
             Nota = notasMateriaDTO.Nota;
+        }
+
+        public void Update(NotasMateria notasMateria)
+        {
+            BoletimId = notasMateria.BoletimId;
+            MateriaId = notasMateria.MateriaId;
+            Nota = notasMateria.Nota;
         }
     }
 }
