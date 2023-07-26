@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -31,6 +32,13 @@ namespace Escola.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc(config =>
+            {
+                config.ReturnHttpNotAcceptable = true;
+                config.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
+                config.InputFormatters.Add(new XmlDataContractSerializerInputFormatter(config));
+            });
+
             services.AddDbContext<EscolaDbContexto>();
             services.AddControllers();
 
@@ -43,6 +51,8 @@ namespace Escola.API
             services.AddScoped<IBoletimRepository, BoletimRepository>();
             services.AddScoped<INotasMateriaService, NotasMateriaService>();
             services.AddScoped<INotasMateriaRepository, NotasMateriaRepository>();
+            services.AddScoped<IUsuarioService, UsuarioService>();
+            services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 
             services.AddMemoryCache();
 
