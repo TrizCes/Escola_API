@@ -18,6 +18,7 @@ namespace Escola.API.DTO.Responses
         {
             Nome = usuario.Nome;
             Login = usuario.Login;
+            Email = usuario.Email;
             TipoUsuario = usuario.TipoUsuario.ToString();
             Interno = usuario.Interno;
         }

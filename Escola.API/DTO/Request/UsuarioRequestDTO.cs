@@ -19,6 +19,7 @@ namespace Escola.API.DTO.Request
         {
             Nome = usuario.Nome;
             Login = usuario.Login;
+            Email = usuario.Email;
             TipoUsuario = usuario.TipoUsuario;
             Interno = usuario.Interno;
         }

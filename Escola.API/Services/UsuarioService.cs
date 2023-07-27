@@ -1,4 +1,5 @@
-﻿using Escola.API.Interfaces.Repositories;
+﻿using Escola.API.Exceptions;
+using Escola.API.Interfaces.Repositories;
 using Escola.API.Interfaces.Services;
 using Escola.API.Model;
 using Escola.API.Utils;
@@ -13,12 +14,22 @@ namespace Escola.API.Services
         {
             _usuarioRepository = usuarioRepository;
         }
+
+        public Usuario Criar(Usuario usuario)
+        {
+            var usuarioDb = ObterPorId(usuario.Login);
+            if (usuarioDb != null)
+                throw new RegistroDuplicadoException("Login já cadastrado, tente novamente");
+
+            usuario.Senha = Criptografia.CriptografarSenha(usuario.Senha);
+            return _usuarioRepository.Inserir(usuario);
+        }
         public Usuario Atualizar(Usuario usuario)
         {
             var usuarioDb = ObterPorId(usuario.Login);
             if (usuarioDb == null)
                 throw new KeyNotFoundException("Usuario Não existe");
-
+            usuario.TipoUsuario = usuarioDb.TipoUsuario;
             usuarioDb.Update(usuario);
             if (!string.IsNullOrEmpty(usuario.Senha))
                 usuarioDb.Senha = Criptografia.CriptografarSenha(usuario.Senha);
@@ -26,17 +37,11 @@ namespace Escola.API.Services
             return usuario;
         }
 
-        public Usuario Criar(Usuario usuario)
-        {
-            usuario.Senha = Criptografia.CriptografarSenha(usuario.Senha);
-            return _usuarioRepository.Inserir(usuario);
-        }
-
         public void Deletar(string login)
         {
             var usuarioDb = ObterPorId(login);
             if (usuarioDb == null)
-                throw new KeyNotFoundException("Usuario Nõa existe");
+                throw new KeyNotFoundException("Usuario Não existe");
 
             _usuarioRepository.Excluir(usuarioDb);
         }

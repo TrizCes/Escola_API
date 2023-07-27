@@ -37,6 +37,7 @@ namespace Escola.API.Model
         {
             Nome = usuario.Nome;
             Login = usuario.Login;
+            Email = usuario.Email;
             TipoUsuario = usuario.TipoUsuario;
             Interno = usuario.Interno;
         }
