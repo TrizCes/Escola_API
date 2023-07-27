@@ -3,20 +3,15 @@ using Escola.API.DataBase.Repositories;
 using Escola.API.Interfaces.Repositories;
 using Escola.API.Interfaces.Services;
 using Escola.API.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Escola.API
 {
@@ -32,6 +27,23 @@ namespace Escola.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            
+            var jwtChave = Configuration.GetSection("jwtTokenChave").Get<string>();
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(x =>
+            {
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(jwtChave)),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
+            
 
             services.AddDbContext<EscolaDbContexto>();
             services.AddControllers();
@@ -47,12 +59,37 @@ namespace Escola.API
             services.AddScoped<INotasMateriaRepository, NotasMateriaRepository>();
             services.AddScoped<IUsuarioService, UsuarioService>();
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+            services.AddScoped<IAuthService, AuthService>();
 
             services.AddMemoryCache();
 
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Escola.API", Version = "v1" });
+                c.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
+                {
+                    Description = @"JWT Authorization header using the Bearer scheme. 
+                                              Escreva 'Bearer' [espaço] e o token gerado no login na caixa abaixo.
+                                              Exemplo: 'Bearer 12345abcdef'",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                                          {
+                                            {
+                                              new OpenApiSecurityScheme
+                                              {
+                                                Reference = new OpenApiReference
+                                                  {
+                                                    Type = ReferenceType.SecurityScheme,
+                                                    Id = JwtBearerDefaults.AuthenticationScheme
+                                                  },
+                                                },
+                                                new List<string>()
+                                              }
+                                            });
             });
         }
 
@@ -71,6 +108,8 @@ namespace Escola.API
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {
