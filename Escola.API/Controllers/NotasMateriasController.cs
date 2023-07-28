@@ -11,11 +11,13 @@ using Escola.API.Interfaces.Services;
 using Escola.API.Exceptions;
 using Escola.API.DTO;
 using Escola.API.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Escola.API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class NotasMateriasController : ControllerBase
     {
         private readonly INotasMateriaService _notasMateriaService;

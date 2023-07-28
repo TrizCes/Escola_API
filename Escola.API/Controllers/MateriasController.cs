@@ -11,11 +11,13 @@ using Escola.API.Exceptions;
 using Escola.API.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Escola.API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class MateriasController : ControllerBase
     {
         private readonly IMateriaService _materiaService;

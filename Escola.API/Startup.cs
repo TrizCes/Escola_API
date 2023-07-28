@@ -12,6 +12,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Collections.Generic;
+using System.Data;
+using System.Text;
 
 namespace Escola.API
 {
@@ -27,7 +29,7 @@ namespace Escola.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            
+
             var jwtChave = Configuration.GetSection("jwtTokenChave").Get<string>();
             services.AddAuthentication(x =>
             {
@@ -43,7 +45,7 @@ namespace Escola.API
                     ValidateAudience = false
                 };
             });
-            
+
 
             services.AddDbContext<EscolaDbContexto>();
             services.AddControllers();
@@ -77,23 +79,21 @@ namespace Escola.API
                     Scheme = "Bearer"
                 });
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement()
-                                          {
-                                            {
-                                              new OpenApiSecurityScheme
-                                              {
-                                                Reference = new OpenApiReference
-                                                  {
-                                                    Type = ReferenceType.SecurityScheme,
-                                                    Id = JwtBearerDefaults.AuthenticationScheme
-                                                  },
-                                                },
-                                                new List<string>()
-                                              }
-                                            });
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                  Type = ReferenceType.SecurityScheme,
+                                  Id = JwtBearerDefaults.AuthenticationScheme
+                            },
+                        },
+                        new List<string>()
+                    }
+                });
             });
         }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -107,9 +107,9 @@ namespace Escola.API
 
             app.UseRouting();
 
-            app.UseAuthorization();
-
             app.UseAuthentication();
+
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

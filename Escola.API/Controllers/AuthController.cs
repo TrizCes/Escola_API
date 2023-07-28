@@ -1,5 +1,6 @@
 ﻿using Escola.API.DTO;
 using Escola.API.Interfaces.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +18,7 @@ namespace Escola.API.Controllers
         }
 
         [HttpPost("/logar")]
+        [AllowAnonymous]
         public IActionResult Logar(LoginDTO loginDTO)
         {
             if (!_authService.Autenticar(loginDTO))

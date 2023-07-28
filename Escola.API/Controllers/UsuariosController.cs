@@ -19,6 +19,7 @@ namespace Escola.API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    
     public class UsuariosController : ControllerBase
     {
         private readonly IUsuarioService _usuarioService;
@@ -31,6 +32,7 @@ namespace Escola.API.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [ProducesResponseType(StatusCodes.Status201Created)]
         [HttpPost]
+        [AllowAnonymous]
         public ActionResult<UsuarioResponseDTO> Post(UsuarioDTO usuario)
         {
             var usuarioDB = _usuarioService.Criar(new Usuario(usuario));
@@ -43,6 +45,7 @@ namespace Escola.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPut("{login}")]
+        [Authorize]
         public ActionResult<UsuarioResponseDTO> Put(UsuarioDTO usuario, string login)
         {
             usuario.Login = login;
@@ -55,6 +58,7 @@ namespace Escola.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet]
+        [Authorize]
         public ActionResult<List<UsuarioResponseDTO>> Get()
         {
             var usuarios = _usuarioService.Obter();
@@ -66,6 +70,7 @@ namespace Escola.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("{login}")]
+        [Authorize]
         public ActionResult<List<UsuarioResponseDTO>> Get(string login)
         {
             var usuarios = _usuarioService.ObterPorId(login);
@@ -77,6 +82,7 @@ namespace Escola.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpDelete("{login}")]
+        [Authorize]
         public ActionResult<List<UsuarioResponseDTO>> Deletar(string login)
         {
             _usuarioService.Deletar(login);

@@ -12,11 +12,13 @@ using Microsoft.Extensions.Caching.Memory;
 using Escola.API.DTO;
 using Escola.API.Exceptions;
 using Escola.API.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Escola.API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class BoletinsController : ControllerBase
     {
         private readonly IBoletimService _boletimService;
