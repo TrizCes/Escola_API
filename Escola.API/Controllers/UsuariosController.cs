@@ -58,7 +58,7 @@ namespace Escola.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "Professor")]
         public ActionResult<List<UsuarioResponseDTO>> Get()
         {
             var usuarios = _usuarioService.Obter();
@@ -82,7 +82,7 @@ namespace Escola.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpDelete("{login}")]
-        [Authorize]
+        [Authorize(Roles = "Professor")]
         public ActionResult<List<UsuarioResponseDTO>> Deletar(string login)
         {
             _usuarioService.Deletar(login);

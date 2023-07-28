@@ -65,6 +65,12 @@ namespace Escola.API
 
             services.AddMemoryCache();
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Aluno", policy => policy.RequireRole("Aluno"));
+                options.AddPolicy("Professor", policy => policy.RequireRole("Professor"));
+            });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Escola.API", Version = "v1" });

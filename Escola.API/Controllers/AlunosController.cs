@@ -14,7 +14,7 @@ namespace Escola.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize]
+    [Authorize(Roles = "Professor")]
     public class AlunosController : ControllerBase
     {
         private readonly IAlunoService _alunoService;

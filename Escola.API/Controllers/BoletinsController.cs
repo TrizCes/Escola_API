@@ -18,7 +18,7 @@ namespace Escola.API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = "Professor")]
     public class BoletinsController : ControllerBase
     {
         private readonly IBoletimService _boletimService;
