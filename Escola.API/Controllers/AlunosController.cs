@@ -14,19 +14,20 @@ namespace Escola.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize(Roles = "Professor")]
+
     public class AlunosController : ControllerBase
     {
         private readonly IAlunoService _alunoService;
         private readonly IMemoryCache _memoryCache;
 
-        public AlunosController( IAlunoService alunoService, IMemoryCache memoryCache)
+        public AlunosController(IAlunoService alunoService, IMemoryCache memoryCache)
         {
             _alunoService = alunoService;
             _memoryCache = memoryCache;
         }
 
         [HttpPost]
+        [Authorize(Roles = "Professor")]
         public IActionResult Post([FromBody] AlunoDTO alunoDTO)
         {
             try
@@ -49,6 +50,7 @@ namespace Escola.API.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public ActionResult<AlunoDTO> Get()
         {
             try
@@ -66,6 +68,7 @@ namespace Escola.API.Controllers
 
         [HttpGet]
         [Route("/{id}")]
+        [Authorize]
         public IActionResult GetComId([FromRoute] int id)
         {
             try
@@ -97,6 +100,7 @@ namespace Escola.API.Controllers
 
         [HttpPut]
         [Route("/{id}")]
+        [Authorize(Roles = "Professor")]
         public IActionResult AtualizaAluno([FromBody] AlunoDTO alunoDTO, [FromRoute] int id)
         {
             try
@@ -122,6 +126,7 @@ namespace Escola.API.Controllers
 
         [HttpDelete]
         [Route("/{id}")]
+        [Authorize(Roles = "Professor")]
         public IActionResult Delete(int id)
         {
 
