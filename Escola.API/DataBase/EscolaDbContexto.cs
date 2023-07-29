@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Escola.API.Model;
+using System.Collections.Generic;
+using System.Reflection.Emit;
 
 
 namespace Escola.API.DataBase
@@ -17,11 +19,11 @@ namespace Escola.API.DataBase
         public virtual DbSet<Materia> Materias { get; set; }
         public virtual DbSet<Boletim> Boletins { get; set; }
         public virtual DbSet<NotasMateria> NotasMaterias { get; set; }
+        public virtual DbSet<Usuario> Usuarios { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Escola-API;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False");
-            
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

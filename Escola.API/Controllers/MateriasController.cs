@@ -11,11 +11,13 @@ using Escola.API.Exceptions;
 using Escola.API.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Escola.API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize(Roles = "Professor")]
     public class MateriasController : ControllerBase
     {
         private readonly IMateriaService _materiaService;
@@ -34,123 +36,69 @@ namespace Escola.API.Controllers
         {
             if(nome != null)
             {
-                try
+                MateriaDTO materia;
+                if (!_memoryCache.TryGetValue<MateriaDTO>($"materia:{nome}", out materia))
                 {
-                    MateriaDTO materia;
-                    if (!_memoryCache.TryGetValue<MateriaDTO>($"materia:{nome}", out materia))
-                    {
-                        materia = new MateriaDTO(_materiaService.ObterPorNome(nome));
-                        _memoryCache.Set<MateriaDTO>($"materia:{nome}", materia, new TimeSpan(0, 0, 20));
-                    }
-                    return Ok(materia);
+                    materia = new MateriaDTO(_materiaService.ObterPorNome(nome));
+                    _memoryCache.Set<MateriaDTO>($"materia:{nome}", materia, new TimeSpan(0, 0, 20));
                 }
-                catch (NotFoundException ex)
-                {
-                    return NotFound(ex.Message);
-
-                }
-                catch (Exception ex)
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-                }
+                return Ok(materia);
             }
 
-            try
-            {
-                var materias = _materiaService.ObterMaterias();
-                IEnumerable<MateriaDTO> materiasDto = materias.Select(x => new MateriaDTO(x));
-                return Ok(materiasDto);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+             var materias = _materiaService.ObterMaterias();
+             IEnumerable<MateriaDTO> materiasDto = materias.Select(x => new MateriaDTO(x));
+             return Ok(materiasDto);
         }
 
         // GET: api/Materias/5
         [HttpGet("{id}")]
         public ActionResult<MateriaDTO> GetMateria(int id)
         {
+            MateriaDTO materia;
+            if (!_memoryCache.TryGetValue<MateriaDTO>($"materia:{id}", out materia))
+            {
+                materia = new MateriaDTO(_materiaService.ObterPorId(id));
+                _memoryCache.Set<MateriaDTO>($"materia:{id}", materia, new TimeSpan(0, 0, 20));
+            }
+            return Ok(materia);
 
-            try
-            {
-                MateriaDTO materia;
-                if (!_memoryCache.TryGetValue<MateriaDTO>($"materia:{id}", out materia))
-                {
-                    materia = new MateriaDTO(_materiaService.ObterPorId(id));
-                    _memoryCache.Set<MateriaDTO>($"materia:{id}", materia, new TimeSpan(0, 0, 20));
-                }
-                return Ok(materia);
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
         }
 
         // POST: api/Materias
         [HttpPost]
         public IActionResult PostMateria([FromBody] MateriaDTO materiaDTO)
         {
-            try
-            {
-                var materia = new Materia(materiaDTO);
+            var materia = new Materia(materiaDTO);
                 
-                materia = _materiaService.Criar(materia);
+            materia = _materiaService.Criar(materia);
 
-                return Ok(new MateriaDTO(materia));
-            }
-            catch (RegistroDuplicadoException ex)
-            {
-                return StatusCode(StatusCodes.Status409Conflict, ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+            return Ok(new MateriaDTO(materia));
+            
         }
 
         // PUT: api/Materias/5
         [HttpPut("{id}")]
         public IActionResult PutMateria(int id, [FromBody] MateriaDTO materiaDTO)
         {
-            try
-            {
-                var materia = new Materia(materiaDTO);
-                materia.Id = id;
-                if (!ModelState.IsValid) return BadRequest("Dados inválidos, favor verificar o formato obrigatório dos dados!");
 
-                materia = _materiaService.Atualizar(materia);
+            var materia = new Materia(materiaDTO);
+            materia.Id = id;
+            if (!ModelState.IsValid) return BadRequest("Dados inválidos, favor verificar o formato obrigatório dos dados!");
 
-                _memoryCache.Remove($"Matéria:{id}");
+            materia = _materiaService.Atualizar(materia);
 
-                return Ok(new MateriaDTO(materia));
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
+            _memoryCache.Remove($"Matéria:{id}");
+
+            return Ok(new MateriaDTO(materia));
+            
         }
 
         // DELETE: api/Materias/5
         [HttpDelete("{id}")]
         public IActionResult DeleteMateria(int id)
         {
-            try
-            {
-                _materiaService.DeletarMateria(id);
-                _memoryCache.Remove($"materia:{id}");
-            }
-            catch (NotFoundException ex)
-            {
-                return StatusCode(StatusCodes.Status404NotFound, ex.Message);
-            }
-
+            _materiaService.DeletarMateria(id);
+            _memoryCache.Remove($"materia:{id}");         
             return StatusCode(204);
         }
 

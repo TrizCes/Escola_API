@@ -11,11 +11,13 @@ using Escola.API.Interfaces.Services;
 using Escola.API.Exceptions;
 using Escola.API.DTO;
 using Escola.API.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Escola.API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize(Roles = "Professor")]
     public class NotasMateriasController : ControllerBase
     {
         private readonly INotasMateriaService _notasMateriaService;
@@ -29,20 +31,9 @@ namespace Escola.API.Controllers
         [HttpPost("/NotasMateria")]
         public ActionResult<NotasMateria> PostNotasMateria([FromBody] NotasMateriaDTO notasMateriaDTO)
         {
-            try
-            {
-                notasMateriaDTO.Id = _notasMateriaService.Criar(new NotasMateria(notasMateriaDTO)).Id;
+            notasMateriaDTO.Id = _notasMateriaService.Criar(new NotasMateria(notasMateriaDTO)).Id;
 
-                return Ok(notasMateriaDTO);
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            return Ok(notasMateriaDTO);
         }
 
         // PUT: api/NotasMaterias/5
@@ -50,77 +41,33 @@ namespace Escola.API.Controllers
         [HttpPut("/NotasMateria/{id}")]
         public IActionResult PutNotasMateria(int id, NotasMateriaDTO notasMateriaDTO)
         {
-            try
-            {
-                notasMateriaDTO.Id = id;
-                return Ok(new NotasMateriaDTO(_notasMateriaService.Atualizar(new NotasMateria(notasMateriaDTO))));
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            notasMateriaDTO.Id = id;
+            return Ok(new NotasMateriaDTO(_notasMateriaService.Atualizar(new NotasMateria(notasMateriaDTO))));
         }
 
         // GET: NotasMaterias/5
         [HttpGet("{id}")]
         public ActionResult<NotasMateria> GetNotasMateria(int id)
         {
-            try
-            {
-                var notasMateria = _notasMateriaService.ObterPorId(id);
-                return Ok(new NotasMateriaDTO (notasMateria));
-            }catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
-
+            var notasMateria = _notasMateriaService.ObterPorId(id);
+            return Ok(new NotasMateriaDTO (notasMateria));
         }
 
         // GET: NotasMaterias
         [HttpGet("/alunos/boletins/{boletimId}/NotasMateria/")]
         public ActionResult<NotasMateria> GetNotasMaterias(int boletimId)
         {
-            try
-            {
-                var notasMateria = _notasMateriaService.ObterNotasBoletim(boletimId);
-                return Ok(notasMateria);
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+            var notasMateria = _notasMateriaService.ObterNotasBoletim(boletimId);
+            return Ok(notasMateria);
         }
 
         // DELETE: /NotasMaterias/5
         [HttpDelete("/NotasMaterias/{id}")]
         public IActionResult DeleteNotasMateria(int id)
         {
-            try
-            {
-                _notasMateriaService.DeletarNota(id);
 
-                return StatusCode(204);
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            _notasMateriaService.DeletarNota(id);
+            return StatusCode(204);
         }
         
     }
