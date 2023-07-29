@@ -2,6 +2,7 @@ using Escola.API.DataBase;
 using Escola.API.DataBase.Repositories;
 using Escola.API.Interfaces.Repositories;
 using Escola.API.Interfaces.Services;
+using Escola.API.Middlewares;
 using Escola.API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -108,6 +109,11 @@ namespace Escola.API
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Escola.API v1"));
             }
+
+
+            app.UseMiddleware<ForbiddenMiddleware>();
+
+            app.UseMiddleware<ErrorMiddleware>();
 
             app.UseHttpsRedirection();
 

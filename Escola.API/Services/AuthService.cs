@@ -41,18 +41,18 @@ namespace Escola.API.Services
             var key = Encoding.ASCII.GetBytes(_chaveJwt);
 
             var tokenDescriptor = new SecurityTokenDescriptor
-        {
-            Subject = new ClaimsIdentity(new Claim[]
+            {
+                Subject = new ClaimsIdentity(new Claim[]
           {
                     new Claim(ClaimTypes.Name, usuario.Login),
                     new Claim(ClaimTypes.Role, usuario.TipoUsuario.ToString())
           }),
-            Expires = DateTime.UtcNow.AddHours(2),
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-        };
+                Expires = DateTime.UtcNow.AddHours(2),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
 
-        var token = tokenHandler.CreateToken(tokenDescriptor);
-        return tokenHandler.WriteToken(token);
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
+        }
     }
-}
 }

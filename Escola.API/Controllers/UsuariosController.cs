@@ -36,8 +36,6 @@ namespace Escola.API.Controllers
         public ActionResult<UsuarioResponseDTO> Post(UsuarioDTO usuario)
         {
             var usuarioDB = _usuarioService.Criar(new Usuario(usuario));
-
-
             return Created(Request.PathBase, new UsuarioResponseDTO(usuarioDB));
         }
 
@@ -50,7 +48,6 @@ namespace Escola.API.Controllers
         {
             usuario.Login = login;
             var usuarioDB = _usuarioService.Atualizar(new Usuario(usuario));
-
             return Ok(new UsuarioResponseDTO(usuarioDB));
         }
 
@@ -62,7 +59,6 @@ namespace Escola.API.Controllers
         public ActionResult<List<UsuarioResponseDTO>> Get()
         {
             var usuarios = _usuarioService.Obter();
-
             return Ok(usuarios.Select(x => new UsuarioResponseDTO(x)));
         }
 
@@ -74,7 +70,6 @@ namespace Escola.API.Controllers
         public ActionResult<List<UsuarioResponseDTO>> Get(string login)
         {
             var usuarios = _usuarioService.ObterPorId(login);
-
             return Ok(new UsuarioResponseDTO(usuarios));
         }
 

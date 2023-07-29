@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <Compile Remove="DTO\Responses\NotasMateriaDTO.cs" />
+    <Compile Remove="Exceptions\NotFoundException  - Cópia.cs" />
   </ItemGroup>
 
   <ItemGroup>
