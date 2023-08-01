@@ -58,7 +58,7 @@ namespace Escola.API.Services
 
             if (_materiaService.ObterPorId(notasMateria.MateriaId) == null) throw new NotFoundException("A matéria não consta no nosso banco de dados");
 
-            if (notasMateria.Nota < 0) throw new NotaInvalidaException("A nota deve ser maior ou igual a 0");
+            if (notasMateria.Nota < 0 || notasMateria.Nota > 10) throw new NotaInvalidaException("A nota deve ser de 0 a 10. Sendo 0 a menor nota e 10 a maior nota");
 
             _repository.Inserir(notasMateria);
             return notasMateria;
