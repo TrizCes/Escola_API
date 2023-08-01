@@ -5,6 +5,7 @@ using Escola.API.Model;
 using Escola.API.Interfaces.Services;
 using Escola.API.Exceptions;
 using NUnit.Framework.Internal;
+using Newtonsoft.Json;
 
 namespace Escola.API.Testes.Services
 {
@@ -12,8 +13,7 @@ namespace Escola.API.Testes.Services
     {
         [Test]
         public void CadastrarNotaMenorqueZero_returnError()
-        {
-            
+        {           
             var notasMateriaRepositoryMock = new Mock<INotasMateriaRepository>();
             var boletimServiceMock = new Mock<IBoletimService>();
             var materiaServiceMock = new Mock<IMateriaService>();
@@ -44,7 +44,6 @@ namespace Escola.API.Testes.Services
         [Test]
         public void CadastrarMaiorQueDez_returnError()
         {
-
             var notasMateriaRepositoryMock = new Mock<INotasMateriaRepository>();
             var boletimServiceMock = new Mock<IBoletimService>();
             var materiaServiceMock = new Mock<IMateriaService>();
@@ -69,6 +68,36 @@ namespace Escola.API.Testes.Services
             {
                 notasMateriaService.Criar(notasMateria);
             });
+        }
+
+        [Test]
+        public void CadastrarNotas()
+        {
+            var notasMateriaRepositoryMock = new Mock<INotasMateriaRepository>();
+            var boletimServiceMock = new Mock<IBoletimService>();
+            var materiaServiceMock = new Mock<IMateriaService>();
+
+            var notasMateriaService = new NotasMateriaService(notasMateriaRepositoryMock.Object, boletimServiceMock.Object, materiaServiceMock.Object);
+
+            // Mockando o retorno dos serviços relacionados para evitar exceções de NotFound no teste
+            boletimServiceMock.Setup(s => s.ObterPorId(It.IsAny<int>())).Returns(new Boletim());
+            materiaServiceMock.Setup(s => s.ObterPorId(It.IsAny<int>())).Returns(new Materia());
+
+            // Criação de uma nota com nota menor que -1
+            var notasMateria = new NotasMateria
+            {
+                BoletimId = 1,
+                MateriaId = 1,
+                Nota = 10
+            };
+
+            //ACT
+            var result = notasMateriaService.Criar(notasMateria);
+
+            // Assert
+            // Verifica se o método Criar foi chamado com uma nota que atende à condição ( 0 >= nota <= 10)
+            Assert.AreEqual(JsonConvert.SerializeObject(notasMateria), JsonConvert.SerializeObject(result));
+
         }
     } 
 }
