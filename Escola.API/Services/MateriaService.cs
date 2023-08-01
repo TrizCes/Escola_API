@@ -3,7 +3,6 @@ using Escola.API.Interfaces.Repositories;
 using Escola.API.Model;
 using Escola.API.Exceptions;
 using System.Collections.Generic;
-using Escola.API.DataBase.Repositories;
 
 namespace Escola.API.Services
 {
@@ -37,7 +36,7 @@ namespace Escola.API.Services
             return materia;
         }
         public Materia Criar(Materia materia) {
-            var materiaExist = _materiaRepository.MateriaJaCadastrado(materia.Nome);
+            var materiaExist = _materiaRepository.MateriaJaCadastrada(materia.Nome);
             if (materiaExist)
             {
                 throw new RegistroDuplicadoException("Matéria já cadastrada");
@@ -64,8 +63,7 @@ namespace Escola.API.Services
                 throw new NotFoundException("Matéria não encontrada");
             }
 
-            _materiaRepository.Excluir(materiaDelete);
-            
+            _materiaRepository.Excluir(materiaDelete);            
         }
     }
 }

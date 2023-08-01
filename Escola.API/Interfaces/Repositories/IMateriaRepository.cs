@@ -6,6 +6,6 @@ namespace Escola.API.Interfaces.Repositories
     {
         public Materia ObterPorNome(string nome);
 
-        public bool MateriaJaCadastrado(string nome);
+        public bool MateriaJaCadastrada(string nome);
     }
 }
