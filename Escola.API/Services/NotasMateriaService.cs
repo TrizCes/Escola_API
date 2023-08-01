@@ -3,6 +3,7 @@ using Escola.API.Exceptions;
 using Escola.API.Interfaces.Repositories;
 using Escola.API.Interfaces.Services;
 using Escola.API.Model;
+using System;
 using System.Collections.Generic;
 
 namespace Escola.API.Services
@@ -19,6 +20,7 @@ namespace Escola.API.Services
             _boletimService = boletimService;
             _materiaService = materiaService;
         }
+
         public NotasMateria ObterPorId(int id)
         {
             NotasMateria notas = _repository.ObterPorId(id);
@@ -52,14 +54,12 @@ namespace Escola.API.Services
 
         public NotasMateria Criar(NotasMateria notasMateria)
         {
-            if (_boletimService.ObterPorId(notasMateria.BoletimId) == null)
-            {
-                throw new NotFoundException("Boletim não consta no nosso banco de dados");
-            }
-            if (_materiaService.ObterPorId(notasMateria.MateriaId) == null)
-            {
-                throw new NotFoundException("A matéria não consta no nosso banco de dados");
-            }
+            if (_boletimService.ObterPorId(notasMateria.BoletimId) == null) throw new NotFoundException("Boletim não consta no nosso banco de dados");
+
+            if (_materiaService.ObterPorId(notasMateria.MateriaId) == null) throw new NotFoundException("A matéria não consta no nosso banco de dados");
+
+            if (notasMateria.Nota < 0) throw new NotaInvalidaException("A nota deve ser maior ou igual a 0");
+
             _repository.Inserir(notasMateria);
             return notasMateria;
         }
