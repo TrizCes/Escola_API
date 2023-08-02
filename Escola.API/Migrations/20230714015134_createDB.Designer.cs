@@ -4,6 +4,7 @@ using Escola.API.DataBase;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Escola.API.Migrations
 {
     [DbContext(typeof(EscolaDbContexto))]
-    partial class EscolaDbContextoModelSnapshot : ModelSnapshot
+    [Migration("20230714015134_createDB")]
+    partial class createDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -176,34 +178,6 @@ namespace Escola.API.Migrations
                         .HasFilter("[Nome] IS NOT NULL");
 
                     b.ToTable("TURMA", (string)null);
-                });
-
-            modelBuilder.Entity("Escola.API.Model.Usuario", b =>
-                {
-                    b.Property<string>("Login")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Interno")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Senha")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("TipoUsuario")
-                        .HasColumnType("int");
-
-                    b.HasKey("Login");
-
-                    b.ToTable("Usuarios");
                 });
 
             modelBuilder.Entity("Escola.API.Model.Boletim", b =>

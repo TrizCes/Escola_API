@@ -1,6 +1,6 @@
 ﻿using Escola.API.DTO;
 using System;
-using static System.Net.Mime.MediaTypeNames;
+using System.Collections.Generic;
 
 namespace Escola.API.Model
 {
@@ -14,12 +14,12 @@ namespace Escola.API.Model
         public string Telefone { get; set; }
         public string Email { get; set; }
         public DateTime DataNascimento { get; set; }
+        public ICollection<Boletim> Boletins { get; set; }
 
         public Aluno()
         {
-            
-        }
 
+        }
 
         public Aluno(AlunoDTO aluno)
         {

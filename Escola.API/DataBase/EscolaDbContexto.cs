@@ -1,17 +1,29 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Escola.API.Model;
+using System.Collections.Generic;
+using System.Reflection.Emit;
+
 
 namespace Escola.API.DataBase
 {
     public class EscolaDbContexto : DbContext
     {
+        public EscolaDbContexto() { }
+
+        public EscolaDbContexto(DbContextOptions options) : base(options) { }
+
         public virtual DbSet<Aluno> Alunos { get; set; }
 
         public virtual DbSet<Turma> Turmas { get; set; }
 
+        public virtual DbSet<Materia> Materias { get; set; }
+        public virtual DbSet<Boletim> Boletins { get; set; }
+        public virtual DbSet<NotasMateria> NotasMaterias { get; set; }
+        public virtual DbSet<Usuario> Usuarios { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Password=P@ssword;Persist Security Info=True;User ID=sa;Initial Catalog=EscolaDB-Audaces;Data Source=tcp:localhost,1433");
+            optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Escola-API;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -22,7 +34,7 @@ namespace Escola.API.DataBase
                                         .HasName("Pk_aluno_id");
 
             modelBuilder.Entity<Aluno>().Property(x => x.Id)
-                                        .HasColumnName("PK_ID" )
+                                        .HasColumnName("PK_ID")
                                         .HasColumnType("INT");
 
             modelBuilder.Entity<Aluno>().Property(x => x.Nome)
@@ -37,7 +49,8 @@ namespace Escola.API.DataBase
                                         .HasColumnType("VARCHAR")
                                         .HasMaxLength(150);
 
-            modelBuilder.Entity<Aluno>().Ignore(x => x.Idade);
+            modelBuilder.Entity<Aluno>().Property(x => x.Idade)
+                                        .HasDefaultValue(null);
 
             modelBuilder.Entity<Aluno>().Property(x => x.Email)
                                         .IsRequired()
@@ -86,6 +99,72 @@ namespace Escola.API.DataBase
 
             modelBuilder.Entity<Turma>().HasIndex(x => x.Nome)
                                         .IsUnique();
+
+            modelBuilder.Entity<Materia>().ToTable("Materias");
+
+            modelBuilder.Entity<Materia>().HasKey(x => x.Id);
+
+            modelBuilder.Entity<Materia>().Property(x => x.Id)
+                                        .HasColumnName("ID")
+                                        .HasColumnType("INT");
+
+            modelBuilder.Entity<Materia>().Property(x => x.Nome)
+                                        .IsRequired()
+                                        .HasColumnName("NOME")
+                                        .HasColumnType("VARCHAR")
+                                        .HasMaxLength(50);
+
+            modelBuilder.Entity<Boletim>().ToTable("Boletins");
+
+            modelBuilder.Entity<Boletim>().Property(x => x.Id)
+                                        .HasColumnName("ID")
+                                        .HasColumnType("INT");
+
+            modelBuilder.Entity<Boletim>().HasKey(x => x.Id);
+
+            modelBuilder.Entity<Boletim>().Property(x => x.DateTime)
+                                        .IsRequired()
+                                        .HasColumnName("DATA")
+                                        .HasColumnType("DATE");
+
+            modelBuilder.Entity<Boletim>().Property(x => x.AlunoId)
+                                        .IsRequired()
+                                        .HasColumnName("Aluno_FK")
+                                        .HasColumnType("INT");
+
+            modelBuilder.Entity<Boletim>().HasOne(x => x.Aluno)
+                                        .WithMany(x => x.Boletins)
+                                        .HasForeignKey(x => x.AlunoId)
+                                        .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<NotasMateria>().ToTable("NotasMaterias");
+
+            modelBuilder.Entity<NotasMateria>().Property(x => x.Id)
+                                        .HasColumnName("ID")
+                                        .HasColumnType("INT");
+
+            modelBuilder.Entity<NotasMateria>().HasKey(x => x.Id);
+
+            modelBuilder.Entity<NotasMateria>().Property(x => x.BoletimId)
+                                        .IsRequired()
+                                        .HasColumnName("Boletim_ID")
+                                        .HasColumnType("INT");
+
+            modelBuilder.Entity<NotasMateria>().HasOne(x => x.Boletim)
+                                        .WithMany(x => x.NotasMaterias)
+                                        .HasForeignKey(x => x.BoletimId)
+                                        .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<NotasMateria>().Property(x => x.MateriaId)
+                                        .IsRequired()
+                                        .HasColumnName("Materia_ID")
+                                        .HasColumnType("INT");
+
+            modelBuilder.Entity<NotasMateria>().HasOne(x => x.Materia)
+                                        .WithMany(x => x.NotasMaterias)
+                                        .HasForeignKey(x => x.MateriaId)
+                                        .OnDelete(DeleteBehavior.Cascade);
+
 
         }
     }
