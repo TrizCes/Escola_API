@@ -44,6 +44,9 @@ namespace Escola.API.Middlewares
                 case NotFoundException:
                     message = ex.Message;
                     break;
+                case NotaInvalidaException:
+                    message = ex.Message;
+                    break;
             }
             message = JsonConvert.SerializeObject(message);
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;

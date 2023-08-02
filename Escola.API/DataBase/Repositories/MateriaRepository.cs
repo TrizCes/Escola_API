@@ -28,7 +28,7 @@ namespace Escola.API.DataBase.Repositories
             return materia;
         }
 
-        public bool MateriaJaCadastrado(string nome)
+        public bool MateriaJaCadastrada(string nome)
             => _context.Materias.Any(x => x.Nome == nome);
     }
 }
